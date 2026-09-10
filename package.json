@@ -1,0 +1,31 @@
+{
+  "name": "@joshuaspence/claude-hud",
+  "version": "0.8.0",
+  "description": "Thin wrapper exposing jarrodwatts/claude-hud as a runnable bin, so it installs cleanly as a mise/npm tool.",
+  "type": "module",
+  "bin": {
+    "claude-hud": "bin/claude-hud.mjs"
+  },
+  "files": [
+    "bin"
+  ],
+  "dependencies": {
+    "claude-hud": "github:jarrodwatts/claude-hud#v0.8.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "author": "Josh Spence <josh@spence.com.au>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshuaspence/claude-hud.git"
+  },
+  "homepage": "https://github.com/joshuaspence/claude-hud#readme",
+  "keywords": [
+    "claude-code",
+    "statusline",
+    "claude-hud",
+    "mise"
+  ]
+}
