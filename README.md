@@ -44,9 +44,19 @@ exec claude-hud
 
 ## Versioning
 
-The wrapper version mirrors the upstream `claude-hud` release it pins (currently **0.8.0**). To
-track a new upstream release, bump `dependencies.claude-hud` to the matching `#vX.Y.Z` tag and
-publish the wrapper at the same version.
+The upstream dependency floats: `github:jarrodwatts/claude-hud#semver:*` resolves to the newest
+`claude-hud` **release tag** at install time, so a fresh install always gets the latest release —
+no per-release bump needed here.
+
+Two consequences worth knowing:
+
+- **Not auto-updating in place.** Package managers cache by *this* wrapper's version, so an
+  existing install only picks up a newer upstream on a fresh (re)install. With mise:
+  `mise install npm:@joshuaspence/claude-hud --force` (or uninstall + install).
+- **Not reproducible over time.** The same wrapper version can deliver different upstream code
+  depending on *when* it's installed — the deliberate trade for always-latest.
+
+The wrapper's own version tracks changes to *this* launcher, not the upstream release it pulls.
 
 ## Credits & license
 

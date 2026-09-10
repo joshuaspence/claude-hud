@@ -10,7 +10,7 @@
     "bin"
   ],
   "dependencies": {
-    "claude-hud": "github:jarrodwatts/claude-hud#v0.8.0"
+    "claude-hud": "github:jarrodwatts/claude-hud#semver:*"
   },
   "engines": {
     "node": ">=18"
