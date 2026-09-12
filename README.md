@@ -18,17 +18,24 @@ build step runs on install).
 
 ## Install
 
-With mise, via the [`vfox-npm`](https://github.com/jdx/vfox-npm) backend (installs by npm registry
-name, so it sidesteps the pnpm-global quirks of mise's built-in `npm:` backend):
+With mise, via its built-in `npm:` backend:
 
 ```toml
 # ~/.config/mise/config.toml
-[plugins]
-vfox-npm = "https://github.com/jdx/vfox-npm"
-
 [tools]
-"vfox-npm:@joshuaspence/claude-hud" = "latest"
+"npm:@joshuaspence/claude-hud" = "latest"
 ```
+
+Two prerequisites, both of which apply only if you have mise install npm tools with pnpm
+(`npm.package_manager = "pnpm"`). Neither is a pnpm restriction you can work around from the
+package side, and mise's default npm package manager needs neither:
+
+- **mise ≥ 2026.9.4.** Older versions pass `--global-bin-dir`, a flag pnpm 12 removed.
+- **`blockExoticSubdeps: false`** in the `pnpm-workspace.yaml` at your `PNPM_HOME` (default
+  `~/.local/share/pnpm`). This package depends on upstream as a git dependency, and pnpm 12
+  refuses git *sub*dependencies with `ERR_PNPM_EXOTIC_SUBDEP`. pnpm reads that resolution-policy
+  setting only from the workspace-root manifest — not `.npmrc`, not `~/.config/pnpm/config.yaml` —
+  and for a `--global` install the workspace root is `PNPM_HOME`.
 
 Then point Claude Code's statusLine at the installed `claude-hud` command (a mise shim on your
 `PATH`). Nothing else is needed — no launcher script:
@@ -55,6 +62,10 @@ Two consequences worth knowing:
 - **Not auto-updating in place.** Package managers cache by *this* wrapper's version, so an
   existing install only picks up a newer upstream on a fresh (re)install. With mise:
   `mise install npm:@joshuaspence/claude-hud --force` (or uninstall + install).
+- **A just-published version can be invisible.** mise ≥ 2026.9.4 applies a supply-chain cooldown
+  by default, so installing a release minutes after it lands fails with "no versions found ...
+  matching date filter". Bypass once with `MISE_MINIMUM_RELEASE_AGE=0 mise install …`, or exempt
+  the tool with `minimum_release_age_excludes = ["npm:@joshuaspence/claude-hud"]`.
 - **Not reproducible over time.** The same wrapper version can deliver different upstream code
   depending on *when* it's installed — the deliberate trade for always-latest.
 
