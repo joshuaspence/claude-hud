@@ -31,16 +31,18 @@ vfox-npm = "https://github.com/jdx/vfox-npm"
 ```
 
 Then point Claude Code's statusLine at the installed `claude-hud` command (a mise shim on your
-`PATH`). A small launcher is still useful to hand the HUD the real terminal width, since Claude
-runs statusLine without a TTY:
+`PATH`). Nothing else is needed — no launcher script:
 
-```bash
-#!/bin/bash
-cols=$({ stty size </dev/tty | awk '{print $2}'; } 2>/dev/null || true)
-: "${cols:=${COLUMNS:-120}}"
-export COLUMNS=$((cols > 4 ? cols - 4 : 1))
-exec claude-hud
+```json
+{
+  "statusLine": { "type": "command", "command": "claude-hud" }
+}
 ```
+
+The launcher already reports the right width. Claude Code sets `$COLUMNS` to the width of the
+whole terminal, but draws the statusline into a pane four columns narrower, so a right-aligned row
+padded to `$COLUMNS` has its tail clipped with an ellipsis. This wrapper subtracts that margin,
+and falls back to reading `/dev/tty` when `$COLUMNS` is absent altogether.
 
 ## Versioning
 
